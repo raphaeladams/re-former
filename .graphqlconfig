@@ -1,0 +1,4 @@
+{
+  "schemaPath": "./build/graphql/schema.graphql",
+  "includes": ["web/**/*.graphql"]
+}

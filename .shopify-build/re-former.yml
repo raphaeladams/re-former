@@ -1,0 +1,49 @@
+containers:
+  default:
+    docker: gcr.io/shopify-docker-images/ci/ruby27:Ruby-2.7.1-Node-12.18.4-Yarn-1.13.0
+steps:
+  - label: 'Prepare dependencies'
+    run:
+      - bundle: ~
+    timeout: 10m
+  - wait
+  - label: ':ruby: Tests'
+    run:
+      - bundle: ~
+      - bin/rails db:setup
+      - bin/rails test
+    services:
+      redis: 'alpine'
+      mysql: '5.6'
+    timeout: 5m
+    parallelism: 1
+  - label: ':rubocop: Ruby Lint'
+    run:
+      - bundle: ~
+      - bundle exec rubocop
+    cache:
+      - tmp/rubocop
+    timeout: 5m
+  - label: ':ruby: Typechecking'
+    run:
+      - bundle: ~
+      - bundle exec srb tc
+    timeout: 5m
+  - label: ':eslint: Javascript lint'
+    run:
+      - yarn:
+          ignore_engines: true
+      - yarn sewing-kit lint --styles false --show-expected
+    timeout: 10m
+  - label: ':js: Javascript Tests'
+    run:
+      - yarn:
+          ignore_engines: true
+      - yarn run sewing-kit test --no-watch
+    timeout: 10m
+  - label: ':typescript: Typecheck'
+    run:
+      - yarn:
+          ignore_engines: true
+      - yarn run sewing-kit type-check
+    timeout: 10m
