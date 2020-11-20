@@ -1,5 +1,4 @@
-<h1>Hi there, this is the Users New view!</h1>
-
+<!--
 <form action="/users" method="post" accept-charset="UTF-8">
 
   <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
@@ -16,3 +15,17 @@
   <input type="submit" value="Submit!">
 
 </form>
+-->
+
+<%= form_tag('/users') do-%>
+    <%= label_tag 'user_username', 'User name:' %>
+    <%= text_field_tag 'user_username' %><br><br>
+
+    <%= label_tag 'user_email', 'Email:' %>
+    <%= text_field_tag 'user_email' %><br><br>
+
+    <%= label_tag 'user_password', 'Password:' %>
+    <%= text_field_tag 'user_password' %><br><br>
+
+    <%= submit_tag 'Submit!' %>
+<% end -%>
